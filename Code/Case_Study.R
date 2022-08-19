@@ -73,14 +73,14 @@ case2 = get_abcd(matched_data = matched_data2)
 
 
 
-a1 = case1[1]
-b1 = case1[2] 
-c1 = case1[3] 
-d1 = case1[4]
-a2 = case2[1]
-b2 = case2[2] 
-c2 = case2[3] 
-d2 = case2[4]
+a1 = case1[1] # 1 
+b1 = case1[2] # 86
+c1 = case1[3] # 43
+d1 = case1[4] # 3024
+a2 = case2[1] # 1
+b2 = case2[2] # 15
+c2 = case2[3] # 21
+d2 = case2[4] # 855
 
 
 
