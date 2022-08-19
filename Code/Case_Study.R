@@ -74,20 +74,21 @@ case2 = get_abcd(matched_data = matched_data2)
 
 
 a1 = case1[1]
-b1 = case1[2]
-c1 = case1[3]
+b1 = case1[2] 
+c1 = case1[3] 
 d1 = case1[4]
 a2 = case2[1]
-b2 = case2[2]
-c2 = case2[3]
+b2 = case2[2] 
+c2 = case2[3] 
 d2 = case2[4]
+
 
 
 # Lower bound
 # Merge result
 
-t = 1.0
-g_list = seq(1.0,1.12,0.01)
+t = 1.1
+g_list = seq(1.0,1.4,0.02)
 iter = 1.0
 result.table = matrix(0, length(g_list), 5)
 
@@ -99,7 +100,7 @@ for (g in g_list) {
     pval.vec[i]=attributable_effect_p_value_lower(a1 + a2,b1 + b2,c1 
                                                   + c2,d1 + d2,a,Gamma = t * g)
   }
-  lci.total= get_lower(a.vec[which(pval.vec>=.05)])
+  lci.total= min(a.vec[which(pval.vec>=.05)])
   
   
   # Two table result
@@ -147,10 +148,10 @@ for (g in g_list) {
     }
   }
   
-  lci.fisher=get_lower(acomb.vec[which(pval.comb.vec.fisher>=.05)])
-  lci.zscore=get_lower(acomb.vec[which(pval.comb.vec.zscore>=.05)])
-  lci.truncated005=get_lower(acomb.vec[which(pval.comb.vec.truncated005>=.05)])
-  lci.bonferroni=get_lower(acomb.vec[which(pval.comb.vec.bonferroni>=.05)])
+  lci.fisher=min(acomb.vec[which(pval.comb.vec.fisher>=.05)])
+  lci.zscore=min(acomb.vec[which(pval.comb.vec.zscore>=.05)])
+  lci.truncated005=min(acomb.vec[which(pval.comb.vec.truncated005>=.05)])
+  lci.bonferroni=min(acomb.vec[which(pval.comb.vec.bonferroni>=.05)])
   
   
   
@@ -165,7 +166,7 @@ for (g in g_list) {
     pval.vec[i]=attributable_effect_p_value_upper(a1 + a2,b1 + b2,c1 + c2,d1 
                                                   + d2,a,Gamma = t * g)
   }
-  uci.total= get_upper(a.vec[which(pval.vec>=.95)])
+  uci.total= max(a.vec[which(pval.vec>=.95)])
   
   
   # Two table result
@@ -208,10 +209,10 @@ for (g in g_list) {
     }
   }
   
-  uci.fisher=get_upper(acomb.vec[which(pval.comb.vec.fisher>=.95)])
-  uci.zscore=get_upper(acomb.vec[which(pval.comb.vec.zscore>=.95)])
-  uci.truncated005=get_upper(acomb.vec[which(pval.comb.vec.truncated005>=.95)])
-  uci.bonferroni=get_upper(acomb.vec[which(pval.comb.vec.bonferroni>=.95)])
+  uci.fisher=max(acomb.vec[which(pval.comb.vec.fisher>=.95)])
+  uci.zscore=max(acomb.vec[which(pval.comb.vec.zscore>=.95)])
+  uci.truncated005=max(acomb.vec[which(pval.comb.vec.truncated005>=.95)])
+  uci.bonferroni=max(acomb.vec[which(pval.comb.vec.bonferroni>=.95)])
   
   
   # Only display lower bound
@@ -233,6 +234,21 @@ colnames(result.table) = c('Gamma','Theta','Merged','Stouffer','Fisher'
 
 
 print(result.table)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
