@@ -121,6 +121,8 @@ matching_output = match_2C_list(Z, dataset_in_dataframe,
 matched_data = matching_output$matched_data_in_order
 matched_data = matched_data[!is.na(matched_data$matched_set),]
 
+matched_data$SENSITIVE = (matched_data$ERASSAY == 1 | matched_data$PRASSAY == 1)
+
 index_set_sensitive = unique(na.omit(matched_data[matched_data$SENSITIVE 
                                                   == TRUE,]$matched_set))
 index_set_insensitive = unique(na.omit(matched_data[matched_data$SENSITIVE 
@@ -132,7 +134,7 @@ data_sensitive = matched_data[matched_data$matched_set
 k = 1
 for (i in index_set_sensitive[2:length(index_set_sensitive)]) {
   d = matched_data[matched_data$matched_set == i,]
-  data_sensitive = rbind(data_sensitive,  d[order(-d$BREAST),])
+  data_sensitive = rbind(data_sensitive,  d[order(-d$BREASTINV),])
   k = k + 1
   print(k)
 }
@@ -143,21 +145,22 @@ data_insensitive = matched_data[matched_data$matched_set ==
 k = 1
 for (i in index_set_insensitive[2:length(index_set_insensitive)]) {
   d = matched_data[matched_data$matched_set == i,]
-  data_insensitive = rbind(data_insensitive, d[order(-d$BREAST),])
+  data_insensitive = rbind(data_insensitive, d[order(-d$BREASTINV),])
   k = k + 1
   print(k)
 }
 
 
-check_balance(Z, matching_output, 
-              cov_list = colnames(final_data_used)[c(2,6,7,8,9,15:20,
-                                                     22:32,34:42,44,45)],
-              plot_propens = FALSE)
+
 
 matched_data1 = data_sensitive
 matched_data2 = data_insensitive
 final_data_used = rbind(data_sensitive,data_insensitive)
 
+check_balance(Z, matching_output, 
+              cov_list = colnames(final_data_used)[c(2,6,7,8,9,15:20,
+                                                     22:32,34:42,44,45)],
+              plot_propens = FALSE)
 
 matched_data1 = matched_data1 %>%
   left_join(f34_os_pub, by = c('ID','ALCNOW')) 
@@ -168,8 +171,8 @@ matched_data2 = matched_data2 %>%
 
 
 
-matched_data1$ALCO7MORE = (matched_data1$ALCOHOL == 6)
-matched_data2$ALCO7MORE = (matched_data2$ALCOHOL == 6)
+matched_data1$ALCO7MORE = (matched_data1$ALCSWK >= 18)
+matched_data2$ALCO7MORE = (matched_data2$ALCSWK >= 18)
 
 matched_data1[is.na(matched_data1$ALCO7MORE),]$ALCO7MORE = FALSE
 matched_data2[is.na(matched_data2$ALCO7MORE),]$ALCO7MORE = FALSE
@@ -189,7 +192,7 @@ matched_data2$R = matched_data2$BREASTINV
 data = data %>%
   left_join(f34_os_pub, by = c('ID','ALCNOW')) 
 
-data$ALCO7MORE = (data$ALCOHOL == 6)
+data$ALCO7MORE = (data$ALCSWK >= 18)
 
 data[is.na(data$ALCO7MORE),]$ALCO7MORE = FALSE
 
@@ -197,7 +200,7 @@ data[is.na(data$ALCO7MORE),]$ALCO7MORE = FALSE
 final_data_used = final_data_used %>%
   left_join(f34_os_pub, by = c('ID','ALCNOW')) 
 
-final_data_used$ALCO7MORE = (final_data_used$ALCOHOL == 6)
+final_data_used$ALCO7MORE = (final_data_used$ALCSWK >= 18)
 
 final_data_used[is.na(final_data_used$ALCO7MORE),]$ALCO7MORE = FALSE
 
@@ -235,4 +238,5 @@ data3 %>% tbl_summary(by = BREASTINV)
 
 write.csv(matched_data1,'matched_data1.csv')
 write.csv(matched_data2,'matched_data2.csv')
+
 
